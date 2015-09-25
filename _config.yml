@@ -13,7 +13,7 @@ title:               fka blog
 tagline:             'development journal'
 description:         'JavaScript and front-end writings by Fatih Kadir Akın. Posts may be in English or Turkish'
 url:                 http://f.github.io
-baseurl:             '/blog'
+baseurl:             ''
 paginate:            10
 
 # About/contact
