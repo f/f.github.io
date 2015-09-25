@@ -1,16 +1,20 @@
+# Dependencies
+markdown:            redcarpet
+highlighter:         pygments
+
 # Permalinks
 #
 # Use of `relative_permalinks` ensures post links from the index work properly.
-permalink:           pretty
+permalink:           :title.html
 relative_permalinks: true
 
 # Setup
 title:               fka blog
-tagline:             'development journal. (posts may be in English or Turkish)'
-description:         'JavaScript and front-end writings by Fatih Kadir Akın.'
+tagline:             'development journal'
+description:         'JavaScript and front-end writings by Fatih Kadir Akın. Posts may be in English or Turkish'
 url:                 http://f.github.io
 baseurl:             '/blog'
-paginate:            5
+paginate:            10
 
 # About/contact
 author:

@@ -1,0 +1,7 @@
+{
+  "author": "Fatih Kadir Akın",
+  "clean_urls": true,
+  "default_date_format": "%B %e, %Y",
+  "with_future_dates": false,
+  "google_analytics": "UA-36193581-1"
+}
