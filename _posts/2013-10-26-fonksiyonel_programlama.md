@@ -14,8 +14,9 @@ Fonksiyonel programlama işin daha fazla matematiğe kaydığı bir programlama 
 
 dediğimizde bunun her zaman `return` eden bir fonksiyon olduğunu biliriz.
 
-    :::javascript
-    function f(x) { return 2*x + 5; }
+{% highlight js %}
+function f(x) { return 2*x + 5; }
+{% endhighlight %}
 
 Bu işlemin JavaScript versiyonu.
 
@@ -29,20 +30,23 @@ Fonksiyonel programlamanın en büyük özelliklerinden birisi de diğer bir ço
 
 Mesela bir fonksiyonun bir dosyaya yazması veya konsola çıktı vermesi yan etki sayılabilir.
 
-    :::javascript
-    function f(x) { y = 5; return 2*x + 5; }
+{% highlight js %}
+function f(x) { y = 5; return 2*x + 5; }
+{% endhighlight %}
 
 Mesela bu yan etkiye sahip bir fonksiyon. Çünkü `y` değişkeni fonksiyonun bir parametresi veya sahip olduğu bir değişken değil.
 
 **void fonksiyon** kavramı, FP'de tamamen yan etki. Çünkü bir fonksiyon bir şey döndürmüyorsa kesinlikle yan etki yapıyordur, veya işe yaramıyordur.
 
-    :::javascript
-    function f(x) { 2*x + 5; }
+{% highlight js %}
+function f(x) { 2*x + 5; }
+{% endhighlight %}
 
 Bu void bir fonksiyon ve hiç bir dönüş değeri yok, yan etki yok ama kullanışsız.
 
-    :::javascript
-    function f(x) { y = 5; }
+{% highlight js %}
+function f(x) { y = 5; }
+{% endhighlight %}
 
 Bu da bir void fonksiyon, fakat yan etki yaratmış.
 
@@ -54,26 +58,30 @@ Fakat yazdığımız bir çok kodda bu tarz yan etkileri yapma zorunluluğu hiss
 
 Fonksiyonlar kendi ihtiyacı olan yan etkileri parametre olarak alıp müdahale ediyorlar, böylece yan etki yaratmadan aynı işlemleri yapabiliyoruz. Yani global state'de bir şey tutmadan bir state'i taşıyabiliyoruz.
 
-    :::javascript
-    function f(x, y) { return [2*x + 5, y]; }
+{% highlight js %}
+function f(x, y) { return [2*x + 5, y]; }
+{% endhighlight %}
 
 diye bir fonksiyonumuz olduğunu varsayalım;
 
-    :::javascript
-    function g(z, y) { return [z+10, y]; }
+{% highlight js %}
+function g(z, y) { return [z+10, y]; }
+{% endhighlight %}
 
 diye de başka bir fonksiyonumuz var;
 
 `y`nin taşımamız gereken global bir state olduğunu düşünelim;
 
-    :::javascript
-    g.apply(null, f(2, 5)) //=> [19, 5]
+{% highlight js %}
+g.apply(null, f(2, 5)) //=> [19, 5]
+{% endhighlight %}
 
 Bu durumu biraz irdeleyelim;
 
-    :::javascript
-    f(2, 5) //=> [9, 5]
-    g(9, 5) //=> [19, 5]
+{% highlight js %}
+f(2, 5) //=> [9, 5]
+g(9, 5) //=> [19, 5]
+{% endhighlight %}
 
 görüldüğü gibi `y` değerinin state'ini taşıdık, ve yanetki kullanmadık.
 
@@ -81,32 +89,34 @@ Bu konuyu anlamamda [ssg'nin ekşisozlük'te yazdığı bu entry](https://eksiso
 
 Normalde yan etki kullanarak bir toplama fonksiyonu yazalım;
 
-    :::javascript
-    var genelToplam = 0;
-    function topla(x, y) {
-        var toplam = x + y;
-        genelToplam += toplam;
-        return toplam;
-    }
+{% highlight js %}
+var genelToplam = 0;
+function topla(x, y) {
+    var toplam = x + y;
+    genelToplam += toplam;
+    return toplam;
+}
 
-    topla(2, 3); //=> 5
-    topla(4, 5); //=> 9
-    genelToplam; //=> 14
+topla(2, 3); //=> 5
+topla(4, 5); //=> 9
+genelToplam; //=> 14
+{% endhighlight %}
 
 Şimdi bu yanetkiye sahip fonksiyonu yan etkisiz hale getirelim;
 
-    :::javascript
-    function topla(x, y, genelToplam) {
-        var toplam = x + y;
-        genelToplam += toplam;
-        return [toplam, genelToplam];
-    }
+{% highlight js %}
+function topla(x, y, genelToplam) {
+    var toplam = x + y;
+    genelToplam += toplam;
+    return [toplam, genelToplam];
+}
 
-    function genelToplam() {
-        return topla(2, 3, topla(4, 5, 0)[1])[1];
-    }
+function genelToplam() {
+    return topla(2, 3, topla(4, 5, 0)[1])[1];
+}
 
-    genelToplam() //=> 14
+genelToplam() //=> 14
+{% endhighlight %}
 
 *Tabii bu noktada çok fazla kafa karıştıran şey var, bunları iyice anlamak gerekiyor ve ben de şu an henüz öğrenme aşamasındayım :)*
 
@@ -114,18 +124,20 @@ Normalde yan etki kullanarak bir toplama fonksiyonu yazalım;
 
 Biraz önce birer `f` ve `g` fonksiyonu tanımlamıştık;
 
-    :::javascript
-    function f(x) { return 2*x + 5; }
-    function g(x) { return x+10; }
+{% highlight js %}
+function f(x) { return 2*x + 5; }
+function g(x) { return x+10; }
+{% endhighlight %}
 
 Fonksiyonel programlamada farklı fonksiyonları `compose` ederek yeni bir fonksiyon elde edebiliyorsunuz, yine aynı matematikteki gibi;
 
-    :::javascript
-    function gof(x) {
-        return g(f(x));
-    }
+{% highlight js %}
+function gof(x) {
+    return g(f(x));
+}
 
-    gof(3) //=> 21
+gof(3) //=> 21
+{% endhighlight %}
 
 `g o f` fonksiyonu `g` ve `f` fonksiyonunun bir kompozisyonu olmuş oldu.
 
@@ -135,22 +147,24 @@ Bu tarz Türkçeleştirmeye karşıyım ama kullanayım dedim. :) Fonksiyonel pr
 
 Bir faktöriyel fonksiyonunu imparative şekilde yazalım;
 
-    :::javascript
-    function factorial(x) {
-        var fact = 1;
-        for (var i = 1; i <= x; i++) {
-            fact *= i;
-        }
-        return fact;
+{% highlight js %}
+function factorial(x) {
+    var fact = 1;
+    for (var i = 1; i <= x; i++) {
+        fact *= i;
     }
+    return fact;
+}
+{% endhighlight %}
 
 Şimdi bunu recursion kullanarak yazalım;
 
-    :::javascript
-    function factorial(x) {
-        if (x == 0) return 1;
-        return x * factorial(x - 1);
-    }
+{% highlight js %}
+function factorial(x) {
+    if (x == 0) return 1;
+    return x * factorial(x - 1);
+}
+{% endhighlight %}
 
 Böylece aynı işlemi fonksiyonel olarak yazmış olduk.
 
@@ -162,92 +176,101 @@ Aynı zamanda *currying, binding* gibi fonksiyonel işlemleri de yapabilir hale 
 
 Mesela:
 
-    :::javascript
-    var plus = function (x, z) {
-        if (!z) z = 0;
-        return function(y) { z = x + y; return [plus(z), z]; }
-    }
+{% highlight js %}
+var plus = function (x, z) {
+    if (!z) z = 0;
+    return function(y) { z = x + y; return [plus(z), z]; }
+}
 
-    // 2 + 3 + 4 + 6 + 10 = 25
-    plus(2)(3)[0](4)[0](6)[0](10)[1] //=> 25
-
+// 2 + 3 + 4 + 6 + 10 = 25
+plus(2)(3)[0](4)[0](6)[0](10)[1] //=> 25
+{% endhighlight %}
 
 *Eloquent JavaScript (Marijn Haverbeke)* isimli kitaptan bir alıntı yapacağım, örneği biraz değiştirdim, bu örnekte JavaScript'in fonksiyonel olarak nasıl kullanılacağına dair bir fikir edinebiliyoruz;
 
-    :::javascript
-    function reduce(combine, base, array) {
-        array.forEach(function (element) {
-            base = combine(base, element);
-        });
-        return base;
-    }
+{% highlight js %}
+function reduce(combine, base, array) {
+    array.forEach(function (element) {
+        base = combine(base, element);
+    });
+    return base;
+}
 
-    function add(a, b) {
-        return a + b;
-    }
+function add(a, b) {
+    return a + b;
+}
 
-    function sum(numbers) {
-        return reduce(add, 0, numbers);
-    }
+function sum(numbers) {
+    return reduce(add, 0, numbers);
+}
+{% endhighlight %}
 
 Burada hiçbir yan etki yaratmadan toplama fonksiyonu oluşturduk:
 
-    :::javascript
-    sum([4, 5, 6]) //=> 15
+{% highlight js %}
+sum([4, 5, 6]) //=> 15
+{% endhighlight %}
 
 Neyse ki, JavaScript zaten `reduce` fonksiyonunu bize sağlıyor, bu yüzden tekrar implemente etmemize gerek yok. Dolayısıyla, `sum` fonksiyonunu JavaScript'te daha hızlı ve kolay şu şekilde hazırlayabiliriz:
 
-    :::javascript
-    function sum(numbers) {
-        return numbers.reduce(add, 0);
-    }
+{% highlight js %}
+function sum(numbers) {
+    return numbers.reduce(add, 0);
+}
+{% endhighlight %}
 
 veya `add` fonksiyonunu da anonim hale getirelim;
 
-    :::javascript
-    function sum(numbers) {
-        return numbers.reduce(function(a, b) {return a + b}, 0);
-    }
+{% highlight js %}
+function sum(numbers) {
+    return numbers.reduce(function(a, b) {return a + b}, 0);
+}
+{% endhighlight %}
 
 ### `map`, `reduce` ile Fonksiyonel Faktöriyel Örneği
 
 JavaScript'te `Array` kullanarak bir `sequence` oluşturabilirsiniz.
 
-    :::javascript
-    Array(1, 2, 3) //=> [1, 2, 3]
-    Array(10) //=> [undefined x 10]
+{% highlight js %}
+Array(1, 2, 3) //=> [1, 2, 3]
+Array(10) //=> [undefined x 10]
+{% endhighlight %}
 
 Dolayısıyla
 
-    :::javascript
-    Array.apply([], Array(2)); // [undefined, undefined]
+{% highlight js %}
+Array.apply([], Array(2)); // [undefined, undefined]
+{% endhighlight %}
 
 şeklinde bir değer oluşturacaktır.
 
-    :::javascript
-    Array.apply([], Array(3)).map(function (x, i) {return i;}); //=> [0, 1, 2]
+{% highlight js %}
+Array.apply([], Array(3)).map(function (x, i) {return i;}); //=> [0, 1, 2]
+{% endhighlight %}
 
 şeklinde bir değer oluşturur. Yani hızlıca istenilen uzunlukta bir dizi oluşturmak JavaScript'te fonksiyonel olarak çok kolay.
 
-    :::javascript
-    function range(n) {
-        return Array.apply([], Array(n)).map(function (x, i) {return i;});
-    }
+{% highlight js %}
+function range(n) {
+    return Array.apply([], Array(n)).map(function (x, i) {return i;});
+}
 
-    range(5) //=> [0, 1, 2, 3, 4]
+range(5) //=> [0, 1, 2, 3, 4]
+{% endhighlight %}
 
 Şimdi de bu fonksiyonu faktöriyel hesaplamak için kullanmaya çalışalım;
 
-    :::javascript
-    function factorial(n) {
-        return range(n)
-            .map(function (num) {return num + 1;})
-            .reduce(function (num, all) {return num * all;});
-    }
+{% highlight js %}
+function factorial(n) {
+    return range(n)
+        .map(function (num) {return num + 1;})
+        .reduce(function (num, all) {return num * all;});
+}
+{% endhighlight %}
 
 fonksiyonel olarak bir aralık oluşturduk, daha sonra bu aralıktan çıkan her değeri `map` ile 1 artırdık ve `reduce` ile çarparak faktöriyel hesaplamış olduk.
 
-### Sonuçeeeeeeef
+### Sonuç
 
 Volkan Özçelik'in Facebook'ta bu posta [yazdığı yorum da](https://www.facebook.com/groups/nodejstr/permalink/602876939750748/?comment_id=603558219682620&offset=0&total_comments=4) çok güzel açıkçası:
 

@@ -27,95 +27,100 @@ _P.S: I used native JavaScript to manage DOM. You can change it into jQuery._
 
 Lets create an HTML with `data-bind` attributes. If we call `data-bind="innerHTML: test"`, it'll run like `element.innerHTML = this.test`
 
-    :::html
-    <div data-bind="innerHTML: fatih, style: {color: color}, onclick: function() {fatih('hi!')}"></div>
-    <div data-bind="innerText: fatih, style: {display: function() {return fatih == 'hi!'?'none':'block'}()}"></div>
+{% highlight html %}
+<div data-bind="innerHTML: fatih, style: {color: color}, onclick: function() {fatih('hi!')}"></div>
+<div data-bind="innerText: fatih, style: {display: function() {return fatih == 'hi!'?'none':'block'}()}"></div>
+{% endhighlight %}
 
 This is the HTML structure what we need.
 
 And that is our Observer:
 
-    :::javascript
-    var Observable = function() {
-        var events = {};
-        this.on = function(name, func) {
-            if (!events[name]) events[name] = [];
-            events[name].push(func);
-        };
-        this.trigger = function(name, data) {
-            if (events[name] && events[name].length > 0) {
-                for (var i = 0, l = events[name].length; i < l; i++) {
-                    events[name][i].call(this, data);
-                }
-            }
-        };
-        this.off = function(name, func) {
-            var l = arguments.length;
-            if (l == 0) {
-                events = {};
-            } else if (l == 1 && events[name]) {
-                delete events[name];
-            } else if (l == 2 && events[name] && events[name].length > 0) {
-                for (var i = 0, _l = events[name].length; i < _l; i++) {
-                    if (events[name][i] == func) {
-                        delete events[name][i];
-                        return;
-                    }
-                }
+{% highlight js %}
+var Observable = function() {
+    var events = {};
+    this.on = function(name, func) {
+        if (!events[name]) events[name] = [];
+        events[name].push(func);
+    };
+    this.trigger = function(name, data) {
+        if (events[name] && events[name].length > 0) {
+            for (var i = 0, l = events[name].length; i < l; i++) {
+                events[name][i].call(this, data);
             }
         }
     };
+    this.off = function(name, func) {
+        var l = arguments.length;
+        if (l == 0) {
+            events = {};
+        } else if (l == 1 && events[name]) {
+            delete events[name];
+        } else if (l == 2 && events[name] && events[name].length > 0) {
+            for (var i = 0, _l = events[name].length; i < _l; i++) {
+                if (events[name][i] == func) {
+                    delete events[name][i];
+                    return;
+                }
+            }
+        }
+    }
+};
+{% endhighlight %}
 
 Let's create the framework!
 
-    :::javascript
-    var MVVM = {
-        value: function(def) {
-            var self = this;
-            var _value;
-            var setter = function(value) {
-                _value = value || def;
-                self.trigger('change:model', {
-                    value: value
-                });
-            };
-            setter.toString = function() {
-                return _value || def;
-            };
-            return setter;
-        }
-    };
+{% highlight js %}
+var MVVM = {
+    value: function(def) {
+        var self = this;
+        var _value;
+        var setter = function(value) {
+            _value = value || def;
+            self.trigger('change:model', {
+                value: value
+            });
+        };
+        setter.toString = function() {
+            return _value || def;
+        };
+        return setter;
+    }
+};
+{% endhighlight %}
 
 And let's make our framework observable:
 
-    :::javascript
-    Observable.call(MVVM);
-    MVVM.on('change:model', function() {
-        Array.prototype.slice.call(document.querySelectorAll('[data-bind]')).forEach(function(el) {
-            var boundData = eval('({' + el.dataset.bind + '})');
-            for (var prop in boundData) {
-                var value = boundData[prop];
-                el[prop] = typeof value == 'object' ?
-                function(prop, val) {
-                    for (var v in val) {
-                        prop[v] = val[v];
-                    }
-                }(el[prop], value) : value;
-                MVVM.trigger('change:view');
-            }
-        });
+{% highlight js %}
+Observable.call(MVVM);
+MVVM.on('change:model', function() {
+    Array.prototype.slice.call(document.querySelectorAll('[data-bind]')).forEach(function(el) {
+        var boundData = eval('({' + el.dataset.bind + '})');
+        for (var prop in boundData) {
+            var value = boundData[prop];
+            el[prop] = typeof value == 'object' ?
+            function(prop, val) {
+                for (var v in val) {
+                    prop[v] = val[v];
+                }
+            }(el[prop], value) : value;
+            MVVM.trigger('change:view');
+        }
     });
-    MVVM.apply = function() {
-        MVVM.trigger('change:model');
-    };
+});
+MVVM.apply = function() {
+    MVVM.trigger('change:model');
+};
+{% endhighlight %}
 
 Let's begin observing:
 
-    :::javascript
-    var color = MVVM.value('red');
-    var fatih = MVVM.value('fath');
+{% highlight js %}
+var color = MVVM.value('red');
+var fatih = MVVM.value('fath');
 
-    MVVM.apply();
+MVVM.apply();
+{% endhighlight %}
 
 And here is the running version:
 

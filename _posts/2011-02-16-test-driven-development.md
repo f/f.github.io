@@ -39,59 +39,60 @@ düşünceleri kafanızda dönüyor. Fakat işler tam düşündüğünüz gibi d
 Şimdi biraz örnekle inceleyelim; diyelim ki bir matematik sınıfımız var.
 Klasik dört işlemi yapabilsin, yani toplama, çıkarma, çarpma, bölme işlemleri için birer method olsun. Normalde nasıl bir sınıf yazardık?
 
-    :::php
-    <?php
-    class Math {
+{% highlight php %}
+<?php
+class Math {
 
-	    /**
-	     * Toplama işlemi
-	     *
-	     * @param  $a
-	     * @param  $b
-	     * @return int Sonuç
-	     */
-	    public function add($a, $b)
-	    {
-		    return $a+$b;
-	    }
+  /**
+   * Toplama işlemi
+   *
+   * @param  $a
+   * @param  $b
+   * @return int Sonuç
+   */
+  public function add($a, $b)
+  {
+    return $a+$b;
+  }
 
-	    /**
-	     * Çıkarma işlemi
-	     *
-	     * @param  $a
-	     * @param  $b
-	     * @return int Sonuç
-	     */
-	    public function subst($a, $b)
-	    {
-		    return $a-$b;
-	    }
+  /**
+   * Çıkarma işlemi
+   *
+   * @param  $a
+   * @param  $b
+   * @return int Sonuç
+   */
+  public function subst($a, $b)
+  {
+    return $a-$b;
+  }
 
-	    /**
-	     * Bölme işlemi
-	     *
-	     * @param  $a
-	     * @param  $b
-	     * @return int Sonuç
-	     */
-	    public function div($a, $b)
-	    {
-		    return $a/$b;
-	    }
+  /**
+   * Bölme işlemi
+   *
+   * @param  $a
+   * @param  $b
+   * @return int Sonuç
+   */
+  public function div($a, $b)
+  {
+    return $a/$b;
+  }
 
-	    /**
-	     * Çarpma işlemi
-	     *
-	     * @param  $a
-	     * @param  $b
-	     * @return int Sonuç
-	     */
-	    public function multiple($a, $b)
-	    {
-		    return $a*$b;
-	    }
+  /**
+   * Çarpma işlemi
+   *
+   * @param  $a
+   * @param  $b
+   * @return int Sonuç
+   */
+  public function multiple($a, $b)
+  {
+    return $a*$b;
+  }
 
-    }
+}
+{% endhighlight %}
 
 Veya daha zekice işlemler, daha farklı implementasyonlar olabilir. TDD sizi kod yazmayı severken yazdığınız kod kadar iyi kod yazmaya yönlendiriyor.
 
@@ -107,23 +108,24 @@ Not: Burada sisteminize **PHPUnit** yüklediğinizi varsayıyorum.
 
 Önce bomboş bir `Math.php` oluşturun, daha sonra ise bir örnekteki gibi bir `MathTest.php`
 
-    :::php
-    <?php
-    require_once 'Math.php';
+{% highlight php %}
+<?php
+require_once 'Math.php';
 
-    class MathTest extends PHPUnit_Framework_TestCase {
-	    /**
-	     * @var Math
-	     */
-	    protected $object;
+class MathTest extends PHPUnit_Framework_TestCase {
+  /**
+   * @var Math
+   */
+  protected $object;
 
-	    protected function setUp() {
-		    $this->object = new Math;
-	    }
+  protected function setUp() {
+    $this->object = new Math;
+  }
 
-	    protected function tearDown() {
-	    }
-    }
+  protected function tearDown() {
+  }
+}
+{% endhighlight %}
 
 Örnekte gördüğünüz gibi `PHPUnit_Framework_TestCase` sınıfını extend eden bir `MathTest` sınıfı yazdık. daha sonra buna bir `setUp` bir de `tearDown` methodu yazdık.
 
@@ -132,37 +134,38 @@ objesinin object propertysini sıfırlayacak. Güzel. Zaten burada genelde pek b
 
 Testi hala çalıştırmıyoruz, şimdi biraz test yazalım:
 
-    :::php
-    <?php
-    require_once 'Math.php';
-    class MathTest extends PHPUnit_Framework_TestCase {
-	    /**
-	     * @var Math
-	     */
-	    protected $object;
+{% highlight php %}
+<?php
+require_once 'Math.php';
+class MathTest extends PHPUnit_Framework_TestCase {
+  /**
+   * @var Math
+   */
+  protected $object;
 
-	    protected function setUp() {
-		    $this->object = new Math;
-	    }
+  protected function setUp() {
+    $this->object = new Math;
+  }
 
-	    protected function tearDown() {
-	    }
+  protected function tearDown() {
+  }
 
-	    public function testTamSayiToplama() {
-		    $this->setName('Tam sayıların toplamı');
+  public function testTamSayiToplama() {
+    $this->setName('Tam sayıların toplamı');
 
-		    $this->assertEquals(3, $this->object->add(1, 2), '1+2 = 3');
-		    $this->assertEquals(5, $this->object->add(2, 3), '2+3 = 5');
+    $this->assertEquals(3, $this->object->add(1, 2), '1+2 = 3');
+    $this->assertEquals(5, $this->object->add(2, 3), '2+3 = 5');
 
-	    }
+  }
 
-	    public function testNegatifSayilarinToplami() {
-		    $this->setName('Negatif sayıların toplamı');
+  public function testNegatifSayilarinToplami() {
+    $this->setName('Negatif sayıların toplamı');
 
-		    $this->assertEquals(-4, $this->object->add(-2, -2), '-2+(-2)=-4');
-		    $this->assertEquals(-4, $this->object->add(10, -14), '10+(-14)=-4');
-	    }
-    }
+    $this->assertEquals(-4, $this->object->add(-2, -2), '-2+(-2)=-4');
+    $this->assertEquals(-4, $this->object->add(10, -14), '10+(-14)=-4');
+  }
+}
+{% endhighlight %}
 
 Gördünüz mü, zor değil, sadece `test` ile başlayan ve istediğimiz bir method adını yazıyoruz, daha sonra içerisine methoddan ne beklediğimizi yazıyoruz:
 
@@ -177,44 +180,47 @@ Sonuç olarak bizim asıl beklentimiz sınıfın çalışan sistem üzerinde nas
 
 Son bir örnekle devam edelim ve bitirelim; demin yazmış olduğum test sınıfından geçen sınıf şuydu:
 
-    :::php
-    <?php
-    class Math {
+{% highlight php %}
+<?php
+class Math {
 
-      /**
-       * Toplama işlemi
-       *
-       * @param  $a
-       * @param  $b
-       * @return int Sonuç
-       */
-      public function add($a, $b)
-      {
-	      return $a+$b;
-      }
-    }
+  /**
+   * Toplama işlemi
+   *
+   * @param  $a
+   * @param  $b
+   * @return int Sonuç
+   */
+  public function add($a, $b)
+  {
+    return $a+$b;
+  }
+}
+{% endhighlight %}
 
 Fakat testler sırasında bir olayı düşünemedik, peki ya şöyle bir case olsaydı?
 
-    :::php
-    <?php
-    //...
-    $this->assertEquals(26, $this->object->add(5,3,2,1,5,10), '5+3+2+1+5+10=26 olmalı');
-    //...
+{% highlight php %}
+<?php
+//...
+$this->assertEquals(26, $this->object->add(5,3,2,1,5,10), '5+3+2+1+5+10=26 olmalı');
+//...
+{% endhighlight %}
 
 O zaman demin yazdığımız methodun implementasyonu tamamen hatalıydı. Çünkü iki parametre alıyoruz ve yalnızca aldığımız iki parametreyi topluyoruz, o halde testten geçmesi için;
 
-    :::php
-    <?php
-    //...
-	    public function add(/* sınırsız değer alabilir... */)
-	    {
-		    //fonksiyona gelen parametrelerin tümünü array olarak alalım.
-		    $values = func_get_args();
-		    //gelen arrayın değerlerini toplayarak geri dönelim
-		    return array_sum($values);
-	    }
-    //...
+{% highlight php %}
+<?php
+//...
+  public function add(/* sınırsız değer alabilir... */)
+  {
+    //fonksiyona gelen parametrelerin tümünü array olarak alalım.
+    $values = func_get_args();
+    //gelen arrayın değerlerini toplayarak geri dönelim
+    return array_sum($values);
+  }
+//...
+{% endhighlight %}
 
 şeklinde görüldüğü üzere, `add` methodumuzun implementasyonunu bu testi geçecek şekilde düzenliyoruz.
 

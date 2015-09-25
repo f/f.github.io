@@ -33,27 +33,29 @@ Evet, buraya kadar işler fazlasıyla "if" koşulu gibi duruyor, fakat "if" koş
 
 Bunu if ile yazsaydık;
 
-    :::javascript
-    if (aliEkmekAlsin()) {
-      paraVer();
-    }
+{% highlight js %}
+if (aliEkmekAlsin()) {
+  paraVer();
+}
 
-    if (!veliSutAlsin()) {
-      cokKiz();
-    }
+if (!veliSutAlsin()) {
+  cokKiz();
+}
+{% endhighlight %}
 
 Burada işlemlerin bitmesi gerektiğini görüyoruz; promise yapılarda bu işlerin bitmesi gerekmiyor. Her iş bitişi için bir promise return ediyoruz. **Imperative** değil **fonksiyonel** bir yapı elde ediyoruz.
 
 Bunu **asenkron** düşündüğümüzde şöyle bir yapıda yazabiliriz;
 
-    :::javascript
-    aliEkmekAlsin().success(function () {
-      paraVer();
-    });
+{% highlight js %}
+aliEkmekAlsin().success(function () {
+  paraVer();
+});
 
-    veliSutAlsin().fail(function () {
-      cokKiz();
-    });
+veliSutAlsin().fail(function () {
+  cokKiz();
+});
+{% endhighlight %}
 
 `If` koşullamasından biraz kurtulduk. Peki bu şekilde yazmak bize ne kazandırdı? Öncelikle, `if` kullanmadığımız için, işlemin sonucunu beklemiyoruz, çok uzun sürse dahi.
 Bunun yerine yapılacak işlemin sonucuna bağlı birer **callback** atıyoruz.
@@ -62,25 +64,27 @@ Bunun yerine yapılacak işlemin sonucuna bağlı birer **callback** atıyoruz.
 
 Evet, geldik işin en can alıcı kısmına. Bu fonksiyonlar `.success`, `.fail` gibi durumları nasıl dönüyorlar?
 
-    :::javascript
-    yap().success(function () {
-      baskaBirSeyYap();
-    });
+{% highlight js %}
+yap().success(function () {
+  baskaBirSeyYap();
+});
+{% endhighlight %}
 
 Cevap: **promise** ile. Bu fonksiyonlar, implemente edilirken, `promise` dönecek şekilde yazılıyorlar.
 
 Bakalım `aliEkmekAlsin` fonksiyonumuz nasıl implemente edilmiş?
 
-    :::javascript
-    aliEkmekAlsin = function () {
-      var deferred = new promise();
+{% highlight js %}
+aliEkmekAlsin = function () {
+  var deferred = new promise();
 
-      $.ajax('/bakkal/ekmek', {}, {
-        success: deferred.resolve,
-        error: deferred.reject
-      });
-      return deferred;
-    };
+  $.ajax('/bakkal/ekmek', {}, {
+    success: deferred.resolve,
+    error: deferred.reject
+  });
+  return deferred;
+};
+{% endhighlight %}
 
 Evet! Ali bakkaldan ekmek alırsa, promise çözülsün (sözünü tutmuş olsun), yoksa promise iptal olsun (sözünü tutmadı :()
 
@@ -88,43 +92,45 @@ Evet! Ali bakkaldan ekmek alırsa, promise çözülsün (sözünü tutmuş olsun
 
 Hayır, karışmadı. Şimdi bunu daha çalışabilir bir hale getirelim:
 
-    :::javascript
-    aliEkmekAlsin = function () {
-      var deferred = new promise();
-      setTimeout(deferred.resolve, 2000);
+{% highlight js %}
+aliEkmekAlsin = function () {
+  var deferred = new promise();
+  setTimeout(deferred.resolve, 2000);
 
-      // promise methodlarını kullanmamız gerekiyor, yoksa sonradan callback bağlayamayız.
-      return deferred;
-    }
+  // promise methodlarını kullanmamız gerekiyor, yoksa sonradan callback bağlayamayız.
+  return deferred;
+}
 
-    aliEkmekAlsin().success(function () {
-      alert('aferin ali!'); // para vermiyoruz tabii ki:P
-    });
+aliEkmekAlsin().success(function () {
+  alert('aferin ali!'); // para vermiyoruz tabii ki:P
+});
+{% endhighlight %}
 
 O zaman bunu çalıştıracak promise sınıfımızın en ilkel halini yazalım:
 
-    :::javascript
-    function promise() {
-      var self = this;
-      var success = function() {};
-      var fail = function () {};
+{% highlight js %}
+function promise() {
+  var self = this;
+  var success = function() {};
+  var fail = function () {};
 
-      this.resolve = function() {
-        success();
-      };
-      this.reject = function() {
-        fail();
-      };
+  this.resolve = function() {
+    success();
+  };
+  this.reject = function() {
+    fail();
+  };
 
-      this.success = function (_success) {
-        success = _success;
-        return self;
-      };
-      this.fail = function (_fail) {
-        fail = fail;
-        return self;
-      };
-    }
+  this.success = function (_success) {
+    success = _success;
+    return self;
+  };
+  this.fail = function (_fail) {
+    fail = fail;
+    return self;
+  };
+}
+{% endhighlight %}
 
 Bütün temeli bu kadar. Gerçekten.
 
@@ -132,34 +138,35 @@ Bütün temeli bu kadar. Gerçekten.
 
 Öncelikle bunun bir hatası var, yalnızca bir `success` callback'i alabiliyor. Bunu biraz daha birikebilir hale getirelim:
 
-    :::javascript
-    function promise() {
-      var self = this;
-      var success = [];
-      var fail = [];
+{% highlight js %}
+function promise() {
+  var self = this;
+  var success = [];
+  var fail = [];
 
-      this.resolve = function() {
-        var i = 0;
-        while (_success = success[i++]) {
-          _success();
-        }
-      };
-      this.reject = function() {
-        var i = 0;
-        while (_fail = fail[i++]) {
-          _fail();
-        }
-      };
-
-      this.success = function (_success) {
-        success.push(_success);
-        return self;
-      };
-      this.fail = function (_fail) {
-        fail.push(_fail);
-        return self;
-      };
+  this.resolve = function() {
+    var i = 0;
+    while (_success = success[i++]) {
+      _success();
     }
+  };
+  this.reject = function() {
+    var i = 0;
+    while (_fail = fail[i++]) {
+      _fail();
+    }
+  };
+
+  this.success = function (_success) {
+    success.push(_success);
+    return self;
+  };
+  this.fail = function (_fail) {
+    fail.push(_fail);
+    return self;
+  };
+}
+{% endhighlight %}
 
 Evet işte oldu. Bu bizim promise algoritmamızın temelini oluşturuyor. Ve aslında çalışan bir promise algoritması. :)
 
@@ -169,122 +176,127 @@ Evet, orası için de fikrimiz var.
 
 Elimizde bir sürü deferred (promise dönen) nesne olsun;
 
-    :::javascript
-    when (aliEkmekAlsin(), veliSutAlsin()).success(function () {
-      alert("aferin ali ve veli!");
-    });
+{% highlight js %}
+when (aliEkmekAlsin(), veliSutAlsin()).success(function () {
+  alert("aferin ali ve veli!");
+});
+{% endhighlight %}
 
 diyerek alabilmeliyiz;
 
 O halde hemen when algoritmasının en ilkel halini yazalım:
 
-    :::javascript
-    function when(ilk, ikinci) {
-      var self = this;
-      var resolved = 0;
+{% highlight js %}
+function when(ilk, ikinci) {
+  var self = this;
+  var resolved = 0;
 
-      var success = [];
-      var fail = [];
+  var success = [];
+  var fail = [];
 
-      var successOrFail = function () {
-        var _success, _fail;
-        var i = 0;
-        if (resolved == 2) {
-          while (_success = success[i++]) {
-            _success();
-          }
-        } else {
-          while (_fail = fail[i++]) {
-            _fail();
-          }
-        }
-      };
-
-      ilk.success(function () {
-        resolved++;
-        successOrFail();
-      }).fail(function() {
-        successOrFail();
-      });
-
-      ikinci.success(function () {
-        resolved++;
-        successOrFail();
-      });
-
-      this.success = function (_success) {
-        success.push(_success);
-        return self;
-      };
-      this.fail = function (_fail) {
-        fail.push(_fail);
-        return self;
-      };
-      return this;
+  var successOrFail = function () {
+    var _success, _fail;
+    var i = 0;
+    if (resolved == 2) {
+      while (_success = success[i++]) {
+        _success();
+      }
+    } else {
+      while (_fail = fail[i++]) {
+        _fail();
+      }
     }
+  };
+
+  ilk.success(function () {
+    resolved++;
+    successOrFail();
+  }).fail(function() {
+    successOrFail();
+  });
+
+  ikinci.success(function () {
+    resolved++;
+    successOrFail();
+  });
+
+  this.success = function (_success) {
+    success.push(_success);
+    return self;
+  };
+  this.fail = function (_fail) {
+    fail.push(_fail);
+    return self;
+  };
+  return this;
+}
+{% endhighlight %}
 
 Biraz uzun oldu, ama en temel hali bu. Kısaca şunu yapıyor, her promise'a bir success callback atayıp, bu callback'lerin bir pointer'ı (resolved) bir artırıyor. Böylece kaç adet resolve olduğunu biliyoruz.
 Eğer resolved ile toplam promise sayısı eşit ise, bu işlem başarılı oluyor. Aksi halde başarısız olarak dönüyor.
 
-    :::javascript
-    when (aliEkmekAlsin(), veliSutAlsin()).success(function () {
-      alert("aferin ali ve veli!");
-    });
+{% highlight js %}
+when (aliEkmekAlsin(), veliSutAlsin()).success(function () {
+  alert("aferin ali ve veli!");
+});
+{% endhighlight %}
 
 artık çalışır durumda.
 
 Fakat bu örnek yalnızca iki deferred için çalışıyor. O zaman bunu biraz daha dinamik yapalım.
 
-    :::javascript
-    function when() {
-      var self = this;
-      var resolved = 0;
+{% highlight js %}
+function when() {
+  var self = this;
+  var resolved = 0;
 
-      var args = arguments;
-      var deferreds = Array.prototype.slice.call(args);
+  var args = arguments;
+  var deferreds = Array.prototype.slice.call(args);
 
-      var success = [];
-      var fail = [];
+  var success = [];
+  var fail = [];
 
-      var successOrFail = function () {
-        var _success, _fail;
-        var i = 0;
-        if (resolved == deferreds.length) {
-          while (_success = success[i++]) {
-            _success();
-          }
-        } else {
-          while (_fail = fail[i++]) {
-            _fail();
-          }
-        }
-      };
-
-      var i = 0;
-      while (deferred = deferreds[i++]) {
-        deferred.success(function () {
-          resolved++;
-          successOrFail();
-        });
+  var successOrFail = function () {
+    var _success, _fail;
+    var i = 0;
+    if (resolved == deferreds.length) {
+      while (_success = success[i++]) {
+        _success();
       }
-
-      this.success = function (_success) {
-        success.push(_success);
-        return self;
-      };
-      this.fail = function (_fail) {
-        fail.push(_fail);
-        return self;
-      };
-      return this;
+    } else {
+      while (_fail = fail[i++]) {
+        _fail();
+      }
     }
+  };
+
+  var i = 0;
+  while (deferred = deferreds[i++]) {
+    deferred.success(function () {
+      resolved++;
+      successOrFail();
+    });
+  }
+
+  this.success = function (_success) {
+    success.push(_success);
+    return self;
+  };
+  this.fail = function (_fail) {
+    fail.push(_fail);
+    return self;
+  };
+  return this;
+}
+{% endhighlight %}
 
 Şimdi deneyelim:
 
-    :::javascript
-    when (aliEkmekAlsin(), veliSutAlsin(), isikIlikSutIcsin()).success(function () {
-      alert("aferin ali ve veli!");
-    });
+{% highlight js %}
+when (aliEkmekAlsin(), veliSutAlsin(), isikIlikSutIcsin()).success(function () {
+  alert("aferin ali ve veli!");
+});
+{% endhighlight %}
 
 Evet, çalışıyor. :)
 

@@ -55,53 +55,58 @@ ZSH güzel autocompletion'ları ile meşhur bir shell'dir. Bu yüzden olsa gerek
 
 Öncelikle `_fka_completion` adında bir fonksiyon yaratıyoruz, bu isim her şey olabilir çünkü daha sonra bu komutu `compdef` ile `fka` komutuna tanıtacağız.
 
-    :::bash
-    _fka_completion() {
+{% highlight bash %}
+_fka_completion() {
 
-    }
+}
+{% endhighlight %}
 
 Daha sonra bu fonksiyonumuz içerisinde argümanların neler olacağını belirtiyoruz.
 
-    :::bash
-    _fka_completion() {
-      _arguments \
-        '1: :->_modul' \
-        '2: :->_komut' \
-      && return 0
-    }
+{% highlight bash %}
+_fka_completion() {
+  _arguments \
+    '1: :->_modul' \
+    '2: :->_komut' \
+  && return 0
+}
+{% endhighlight %}
 
 Eğer 3 parçadan oluşan bir komut yazsaydık,
 
-    :::bash
-    _fka_completion() {
-      _arguments \
-        '1: :->_modul' \
-        '2: :->_komut' \
-        '3: :->_opsiyon' \
-      && return 0
-    }
+{% highlight bash %}
+_fka_completion() {
+  _arguments \
+    '1: :->_modul' \
+    '2: :->_komut' \
+    '3: :->_opsiyon' \
+  && return 0
+}
+{% endhighlight %}
 
 gibi bir bölüm daha eklememiz gerekecekti. Şimdilik ilk hedefimiz sadece ilk bölüm olduğu için 1 adet bırakalım.
 
 Sonrasında ise completion'un bize gönderdiği `$state` değişkeni ile hangi state'de olduğumuzu görüp ona uygun cevabı vermemiz gerekiyor.
 
-    :::bash
-    _fka_completion() {
-      _arguments \
-        '1: :->_modul' \
-      && return 0
+{% highlight bash %}
+_fka_completion() {
+  _arguments \
+    '1: :->_modul' \
+  && return 0
 
-      case $state in
-        _modul)
-          _arguments '1:_modul:(blog ftp site ssh)'
-        ;;
-      esac
-    }
+  case $state in
+    _modul)
+      _arguments '1:_modul:(blog ftp site ssh)'
+    ;;
+  esac
+}
+{% endhighlight %}
 
 dediğimiz zaman autocompletion methodumuz hazır olmuş oluyor. Şimdi bu fonksiyonu `compdef` ile tanımlayalım.
 
-    :::bash
-    compdef _fka_completion fka
+{% highlight bash %}
+compdef _fka_completion fka
+{% endhighlight %}
 
 Bu iki komutu yazdıktan sonra tekrar deneyelim:
 
@@ -118,15 +123,17 @@ Filtreleyelim:
 
 `zsh` da nasıl yapıldığını temel olarak gördüğümüze göre artık bunu bash üzerinde nasıl yapacağımızı görelim. Bash, Zsh'dan daha kolay ama daha kötü bir yazım şekline sahip. Filtrelemeyi de zsh'daki gibi kendisi yapmıyor, bizim yönetmemiz gerekiyor. Detaylarına bakalım.
 
-    :::bash
-    _fka_completion() {
-      COMPREPLY=(blog ftp site ssh)
-    }
+{% highlight bash %}
+_fka_completion() {
+  COMPREPLY=(blog ftp site ssh)
+}
+{% endhighlight %}
 
 dedikten sonra `complete` komutuyla bu fonksiyonu tanıtalım:
 
-    :::bash
-    complete -F _fka_completion fka
+{% highlight bash %}
+complete -F _fka_completion fka
+{% endhighlight %}
 
 Bu iki komutu yazdıktan sonra tekrar deneyelim:
 
@@ -144,17 +151,19 @@ Filtreleyemediğimizi görüyoruz, çünkü bash `COMPREPLY` ile gelen verilere 
 
 Filtrelemeyi madem `COMPREPLY` ile yapamıyoruz, o halde biraz daha akıllı bir hale getirelim. Bu sefer `compgen` komutunu ve filtreleme yapmak için ise `grep` komutunu kullanalım.
 
-    :::bash
-    _fka_completion() {
-      COMPREPLY=( $(compgen -W "blog ftp site ssh" | grep "${COMP_WORDS[COMP_CWORD]}") )
-    }
+{% highlight bash %}
+_fka_completion() {
+  COMPREPLY=( $(compgen -W "blog ftp site ssh" | grep "${COMP_WORDS[COMP_CWORD]}") )
+}
+{% endhighlight %}
 
 `compgen` kullanırken `grep` yerine `--` kullanmak daha doğru bir kullanım olacaktır.
 
-    :::bash
-    _fka_completion() {
-      COMPREPLY=( $(compgen -W "blog ftp site ssh" -- ${COMP_WORDS[COMP_CWORD]}) )
-    }
+{% highlight bash %}
+_fka_completion() {
+  COMPREPLY=( $(compgen -W "blog ftp site ssh" -- ${COMP_WORDS[COMP_CWORD]}) )
+}
+{% endhighlight %}
 
 Bu şekilde dönen tüm sonuçlar arasından uygun olan kelimeyi buluyoruz.
 
@@ -167,53 +176,55 @@ Elimizde artık iki ayrı fonksiyon ve iki ayrı fonksiyon tanıtma komutu var. 
 
 Bunu yapmamızın en kolay yolu `compdef` ve `complete` komutlarının varlığına göre `duck typing` yapmak. Eğer `compdef` komutu varsa zsh, `complete` komutu varsa bash içerisindeyizdir.
 
-    :::bash
-    if type compdef &>/dev/null; then
+{% highlight bash %}
+if type compdef &>/dev/null; then
 
-      # zsh fonksiyonu
-      _fka_completion() {
+  # zsh fonksiyonu
+  _fka_completion() {
 
-      }
-      compdef _fka_completion fka
+  }
+  compdef _fka_completion fka
 
-    elif type complete &>/dev/null; then
+elif type complete &>/dev/null; then
 
-      # bash fonksiyonu
-      _fka_completion() {
+  # bash fonksiyonu
+  _fka_completion() {
 
-      }
-      complete -F _fka_completion fka
+  }
+  complete -F _fka_completion fka
 
-    fi
+fi
+{% endhighlight %}
 
 Yani `fka` komutumuzun yeni hali şu şekilde olacak:
 
-    :::bash
-    if type compdef &>/dev/null; then
+{% highlight bash %}
+if type compdef &>/dev/null; then
 
-      # zsh fonksiyonu
-      _fka_completion() {
+  # zsh fonksiyonu
+  _fka_completion() {
 
-        _arguments \
-          '1: :->_modul' \          
-        && return 0
+    _arguments \
+      '1: :->_modul' \          
+    && return 0
 
-        case $state in
-          _modul)
-            _arguments '1:_modul:(blog ftp ite ssh)'
-          ;;
-        esac
-      }
-      compdef _fka_completion fka
+    case $state in
+      _modul)
+        _arguments '1:_modul:(blog ftp ite ssh)'
+      ;;
+    esac
+  }
+  compdef _fka_completion fka
 
-    elif type complete &>/dev/null; then
+elif type complete &>/dev/null; then
 
-      _fka_completion() {
-        COMPREPLY=( $(compgen -W "blog ftp site ssh" | grep "${COMP_WORDS[COMP_CWORD]}") )
-      }
-      complete -F _fka_completion fka
+  _fka_completion() {
+    COMPREPLY=( $(compgen -W "blog ftp site ssh" | grep "${COMP_WORDS[COMP_CWORD]}") )
+  }
+  complete -F _fka_completion fka
 
-    fi
+fi
+{% endhighlight %}
 
 ## Alt Otomatik Tamamlamalar
 
@@ -227,29 +238,30 @@ diyebilmem için `blog` yazdıktan sonraki ikinci kısmın da değişebilmesi ge
 
 Dolayısıyla yeni bir parça eklemek için `zsh` da yapmamız gerekenler şu şekilde olacak:
 
-    :::bash
-    _fka_completion() {
+{% highlight bash %}
+_fka_completion() {
 
-      _arguments \
-        '1: :->_modul' \
-        '2: :->_komut' \
-      && return 0
+  _arguments \
+    '1: :->_modul' \
+    '2: :->_komut' \
+  && return 0
 
-      case $state in
-        _modul)
-          _arguments '1:_modul:(blog ftp site ssh)'
-        ;;
+  case $state in
+    _modul)
+      _arguments '1:_modul:(blog ftp site ssh)'
+    ;;
 
-        _komut)
-          case $words[2] in
-            blog)
-              _arguments '2:_komut:(new-post new-category)'
-            ;;
-          esac
+    _komut)
+      case $words[2] in
+        blog)
+          _arguments '2:_komut:(new-post new-category)'
         ;;
       esac
-    }
-    compdef _fka_completion fka
+    ;;
+  esac
+}
+compdef _fka_completion fka
+{% endhighlight %}
 
 Şimdi deneyelim:
 
@@ -265,51 +277,53 @@ Dolayısıyla yeni bir parça eklemek için `zsh` da yapmamız gerekenler şu ş
 
 Şimdi aynı işlemi bash üzerinde yapalım.
 
-    :::bash
-    _fka_completion() {
-      case $COMP_CWORD in
-        1)
-          COMPREPLY=( $(compgen -W "blog ftp site ssh" -- ${COMP_WORDS[COMP_CWORD]}) )
-        ;;
-        2)
-          case ${COMP_WORDS[COMP_CWORD-1]} in
-            blog)
-              COMPREPLY=( $(compgen -W "new-post new-category" -- ${COMP_WORDS[COMP_CWORD]}) )
-            ;;
-          esac
+{% highlight bash %}
+_fka_completion() {
+  case $COMP_CWORD in
+    1)
+      COMPREPLY=( $(compgen -W "blog ftp site ssh" -- ${COMP_WORDS[COMP_CWORD]}) )
+    ;;
+    2)
+      case ${COMP_WORDS[COMP_CWORD-1]} in
+        blog)
+          COMPREPLY=( $(compgen -W "new-post new-category" -- ${COMP_WORDS[COMP_CWORD]}) )
         ;;
       esac
-    }
-    complete -F _fka_completion fka
+    ;;
+  esac
+}
+complete -F _fka_completion fka
+{% endhighlight %}
 
 Burada `COMP_CWORD` değeri bize kaçıncı kelimede olduğumuzu gösteriyor. Aynı zamanda `COMP_WORDS` ile tüm kelimeleri alabiliyoruz ve `COMP_LINE` ile tüm komutu almamız da mümkün.
 
 Şimdi buna bir alt modül daha ekleyelim:
 
-    :::bash
-    _fka_completion() {
-      case $COMP_CWORD in
-        1)
-          COMPREPLY=( $(compgen -W "blog ftp site ssh" -- ${COMP_WORDS[COMP_CWORD]}) )
-        ;;
-        2)
-          case ${COMP_WORDS[COMP_CWORD-1]} in
-            blog)
-              COMPREPLY=( $(compgen -W "new-post new-category" -- ${COMP_WORDS[COMP_CWORD]}) )
-            ;;
-          esac
-        ;;
-        # 3. ALT MODUL
-        3)
-          case ${COMP_WORDS[COMP_CWORD-1]} in
-            new-post)
-              COMPREPLY=( $(compgen -W "title abstract" -- ${COMP_WORDS[COMP_CWORD]}) )
-            ;;
-          esac
+{% highlight bash %}
+_fka_completion() {
+  case $COMP_CWORD in
+    1)
+      COMPREPLY=( $(compgen -W "blog ftp site ssh" -- ${COMP_WORDS[COMP_CWORD]}) )
+    ;;
+    2)
+      case ${COMP_WORDS[COMP_CWORD-1]} in
+        blog)
+          COMPREPLY=( $(compgen -W "new-post new-category" -- ${COMP_WORDS[COMP_CWORD]}) )
         ;;
       esac
-    }
-    complete -F _fka_completion fka
+    ;;
+    # 3. ALT MODUL
+    3)
+      case ${COMP_WORDS[COMP_CWORD-1]} in
+        new-post)
+          COMPREPLY=( $(compgen -W "title abstract" -- ${COMP_WORDS[COMP_CWORD]}) )
+        ;;
+      esac
+    ;;
+  esac
+}
+complete -F _fka_completion fka
+{% endhighlight %}
 
 Artık `new-post` için yeni alt modüllerimiz mevcut.
 
@@ -322,31 +336,35 @@ Artık `new-post` için yeni alt modüllerimiz mevcut.
 
 Bu durumda `zsh` için `compadd` komutu kullanılır.
 
-    :::bash
-    _fka_completion() {  
-      compadd -- `ls /etc/`
-    }
+{% highlight bash %}
+_fka_completion() {  
+  compadd -- `ls /etc/`
+}
+{% endhighlight %}
 
 Tabii eğer burada kullanılan `ls` komutu yerine kendi komutunuzu yazdıysanız, bu durumda hangi durumda olduğunuzu gösteren veriyi göndermeniz gerekir.
 
-    :::bash
-    _fka_completion() {  
-      compadd -- `fka completion "${CURRENT-1}"`
-    }
+{% highlight bash %}
+_fka_completion() {  
+  compadd -- `fka completion "${CURRENT-1}"`
+}
+{% endhighlight %}
 
 Aynı durum `bash` için şu şekilde olacaktır:
 
-    :::bash
-    _fka_completion() {  
-      COMPREPLY=( $(compgen -W "`ls /etc/`" -- ${COMP_WORDS[COMP_CWORD]}) )
-    }
+{% highlight bash %}
+_fka_completion() {  
+  COMPREPLY=( $(compgen -W "`ls /etc/`" -- ${COMP_WORDS[COMP_CWORD]}) )
+}
+{% endhighlight %}
 
 Aynı şekilde bunu kendi komutumuzla değiştirecek olursak:
 
-    :::bash
-    _fka_completion() {  
-      COMPREPLY=( $(compgen -W '`fka completion "${COMP_CWORD-1}"`' -- ${COMP_WORDS[COMP_CWORD]}) )
-    }
+{% highlight bash %}
+_fka_completion() {  
+  COMPREPLY=( $(compgen -W '`fka completion "${COMP_CWORD-1}"`' -- ${COMP_WORDS[COMP_CWORD]}) )
+}
+{% endhighlight %}
 
 ---
 

@@ -40,47 +40,50 @@ Her uygulamanın bir manifestosu, bildirisi var. Bu bildiriler uygulama hakkınd
 
 Manifest dosyasının içeriği de şu şekilde:
 
-    :::javascript
-    {
-      "devMode": true,
-      "version": "0.1",
-      "name": "HelloWorld",
-      "identifier": "com.koding.apps.helloworld",
-      "path": "~/Applications/HelloWorld.kdapp",
-      "homepage": "kullaniciadi.koding.com/helloworld",
-      "author": "Kullanici Adiniz",
-      "repository": "git://github.com/kullaniciadi/helloworld.kdapp.git",
-      "description": "HelloWorld : a Koding application created with the blank template.",
-      "category": "web-app",
-      "source": {
-        "blocks": {
-          "app": {
-            "files": [
-              "./index.coffee"
-            ]
-          }
-        },
-        "stylesheets": [
-          "./resources/style.css"
+{% highlight js %}
+{
+  "devMode": true,
+  "version": "0.1",
+  "name": "HelloWorld",
+  "identifier": "com.koding.apps.helloworld",
+  "path": "~/Applications/HelloWorld.kdapp",
+  "homepage": "kullaniciadi.koding.com/helloworld",
+  "author": "Kullanici Adiniz",
+  "repository": "git://github.com/kullaniciadi/helloworld.kdapp.git",
+  "description": "HelloWorld : a Koding application created with the blank template.",
+  "category": "web-app",
+  "source": {
+    "blocks": {
+      "app": {
+        "files": [
+          "./index.coffee"
         ]
-      },
-      "options": {
-        "type": "tab"
-      },
-      "icns": {
-        "128": "./resources/icon.128.png"
       }
-    }
+    },
+    "stylesheets": [
+      "./resources/style.css"
+    ]
+  },
+  "options": {
+    "type": "tab"
+  },
+  "icns": {
+    "128": "./resources/icon.128.png"
+  }
+}
+{% endhighlight %}
 
 Bu manifesto bizim uygulamamızın temel bilgilerini oluşturuyor. Dosyaların neler olduğu uygulamamızın adı, versiyonu, geliştirme modunda olup olmadığı gibi bir çok bilgi mevcut. Şimdilik ismini *HelloWorld* yerine *Hello World* yapalım:
 
-    :::javascript
-    "name": "HelloWorld"
+{% highlight js %}
+"name": "HelloWorld"
+{% endhighlight %}
 
 satırını
 
-    :::javascript
-    "name": "Hello World"
+{% highlight js %}
+"name": "Hello World"
+{% endhighlight %}
 
 olarak değiştiriyoruz ve kaydediyoruz. Editörün sağ üst köşesindeki butonlarla bu işlemi gerçekleştirebilirsiniz.
 
@@ -108,15 +111,17 @@ Uygulama açıldıktan sonra karşımızda kalbimiz kadar temiz bir ekranla kar�
 
 `index.coffee` bizim ana dosyamız. Bu dosyayı açtığımızda içerisinde:
 
-    :::coffeescript
-    do ->
+{% highlight coffeescript %}
+do ->
+{% endhighlight %}
 
 şeklinde bir kodla karşı karşıya kalıyoruz. Bunun JavaScript'çesi:
 
-    :::javascript
-    (function() {
+{% highlight js %}
+(function() {
 
-    })();
+})();
+{% endhighlight %}
 
 Yani bir scope açılmış ve sizin bir şeyler yazmanızı bekliyor. Bu durumda bu isteği boş çevirmemek gerekiyor.
 
@@ -124,46 +129,48 @@ Yani bir scope açılmış ve sizin bir şeyler yazmanızı bekliyor. Bu durumda
 
 Her uygulama scope'u içerisinde `appView` adında bir view mevcut. Bu view bir KDView nesnesi ve KDView'e göre bir geliştirme izlememiz gerekiyor. Bu durumda KDFramework'ü incelemek gerekiyor. Bunun yerine ben **hızlıca bir başlangıç** sağlamanız için bir şablon oluşturdum, sizin yapacağınız da aşağı yukarı aynı şablonu oluşturmak.
 
-    :::coffeescript
-    class MainView extends JView
-      constructor:->
-        super
+{% highlight coffeescript %}
+class MainView extends JView
+  constructor:->
+    super
 
-        # Uygulama kodu buraya…
+    # Uygulama kodu buraya…
 
-      pistachio:->
-        """
-        Buraya HTML/Template Kodu…
-        """
-      viewAppended: ->
-        @setTemplate do @pistachio
+  pistachio:->
+    """
+    Buraya HTML/Template Kodu…
+    """
+  viewAppended: ->
+    @setTemplate do @pistachio
 
-    appView.addSubView new MainView
+appView.addSubView new MainView
+{% endhighlight %}
 
 Bu temel bir uygulama şablonu.
 
 Şimdi uygulamamızı biraz daha geliştirelim:
 
-    :::coffeescript
-    class MainView extends JView
-      constructor:->
-        super
-        @header = new KDHeaderView
-          type: "big"
-          title: "Hello World!"
+{% highlight coffeescript %}
+class MainView extends JView
+  constructor:->
+    super
+    @header = new KDHeaderView
+      type: "big"
+      title: "Hello World!"
 
-      pistachio:->
-        """
-        {{> @header}}
-        <p>
-            Hello World!!!
-        </p>
-        """
-      viewAppended: ->
-        @setTemplate do @pistachio
+  pistachio:->
+    """
+    {{> @header}}
+    <p>
+        Hello World!!!
+    </p>
+    """
+  viewAppended: ->
+    @setTemplate do @pistachio
 
-    appView.addSubView new MainView
-      cssClass: "hello-world"
+appView.addSubView new MainView
+  cssClass: "hello-world"
+{% endhighlight %}
 
 Bu kodu yazdığımızda karşımıza şu şekilde bir uygulama çıkıyor:
 
@@ -179,73 +186,78 @@ Kite'larımız daha önce bahsettiğimiz gibi birer kablo, birer bağlantı hatt
 
 Kite'lar teknik anlamda aynı front-end'deki Ajax gibi çalışıyorlar. Örnekte jQuery ile yapılmış bir Ajax request görüyoruz.
 
-    :::javascript
-    $.ajax({
-      url: "/myapi",
-      data: {a: 1, b: 2},
-      success: function() {
-        // veri geldikten sonra...
-      }
-    });
+{% highlight js %}
+$.ajax({
+  url: "/myapi",
+  data: {a: 1, b: 2},
+  success: function() {
+    // veri geldikten sonra...
+  }
+});
+{% endhighlight %}
 
 veya CoffeeScript ile;
 
-    :::coffeescript
-    $.ajax
-      url: "/myapi"
-      data:
-        a: 1
-        b: 2
-      success: ->
-        // veri geldikten sonra...
+{% highlight coffeescript %}
+$.ajax
+  url: "/myapi"
+  data:
+    a: 1
+    b: 2
+  success: ->
+    // veri geldikten sonra...
+{% endhighlight %}
 
 şeklindeki bir Ajax ile `/myapi` öğesinden veri çektiğimizi hatırlayalım. Fakat bu kod server üzerinde HTTP ile çalışıyordu. Bu yapı yine Koding'in Kite'larına benziyor fakat örnekteki gibi bir kod ile çalışıyor.
 
-    :::coffeescript
-    kite = KD.getSingleton "kiteController"
-    kite.run
-      kiteName: "mykite"
-      withArgs:
-        a: 1
-        b: 2
-    , (err, data)->
-      // veri geldikten sonra…
+{% highlight coffeescript %}
+kite = KD.getSingleton "kiteController"
+kite.run
+  kiteName: "mykite"
+  withArgs:
+    a: 1
+    b: 2
+, (err, data)->
+  // veri geldikten sonra...
+{% endhighlight %}
 
 Gördüğünüz gibi, kod neredeyse aynı.
 
 `kite.run` methodu *`object|string, function`* şeklinde bir parametre alıyor fakat nesne yerine bir string koyarsanız o kodu kullanıcının sunucusu üzerinde /Users/fka/Dropbox/Apps/Calepin/koding-2-uygulama-gelistirme.mdçalıştırıyor.
 
-    :::coffeescript
-    kite = KD.getSingleton "kiteController"
-    kite.run "ls", (err, data)->
-      // "ls" komutunun çıktısı
+{% highlight coffeescript %}
+kite = KD.getSingleton "kiteController"
+kite.run "ls", (err, data)->
+  // "ls" komutunun çıktısı
+{% endhighlight %}
 
 Şimdi biraz önceki kodumuza tekrar dönelim.
 
-    :::coffeescript
-    class MainView extends JView
-      constructor:->
-        super
-        @header = new KDHeaderView
-          type: "big"
-          title: "Hello World!"
+{% highlight coffeescript %}
+class MainView extends JView
+  constructor:->
+    super
+    @header = new KDHeaderView
+      type: "big"
+      title: "Hello World!"
 
-        kite = KD.getSingleton "kiteController"
-        kite.run "ls", (err, res)=>
-          @header.$().next().append res
+    kite = KD.getSingleton "kiteController"
+    kite.run "ls", (err, res)=>
+      @header.$().next().append res
 
-      pistachio:->
-        """
-        {{> @header}}
-        <pre>
-        ls result:
-        </pre>
-        """
-      viewAppended: ->
-        @setTemplate do @pistachio
+  pistachio:->
+    """
+    {{> @header}}
+    <pre>
+    ls result:
+    </pre>
+    """
+  viewAppended: ->
+    @setTemplate do @pistachio
 
-    appView.addSubView new MainView
-      cssClass: "hello-world"
+appView.addSubView new MainView
+  cssClass: "hello-world"
+{% endhighlight %}
 
 Burada ls komutu alıp çıktısını `$()` methodunu kullanarak DOM elementine ulaştığımız `@header` değişkeninden sonraki elemente (Burada `pre` tagına) ekliyoruz. Şimdi bakalım nasıl bir sonuç elde ettik:
 

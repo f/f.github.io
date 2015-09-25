@@ -14,11 +14,12 @@ Merhaba,
 
 Bir önceki konuda Bookmarklet yapmayı anlatmıştık. Temel olarak bir bookmarklet’in nasıl çalıştığını gördük.
 
-    :::javascript
-    javascript:(function(bm){if(!window.bmlet)window.bmlet={};if(!window.bmlet[bm]){window.bmlet[bm]
-    =true;var s=document.createElement('script');s.onerror=function(){window.bmlet[bm]=false;};s.src
-    =bm;document.getElementsByTagName('head')[0].appendChild(s);}}('http://f.cl.ly/items/0X2q3N2n1V0
-    i0B0R3X20/bookmarklet.js'));
+{% highlight js %}
+javascript:(function(bm){if(!window.bmlet)window.bmlet={};if(!window.bmlet[bm]){window.bmlet[bm]
+=true;var s=document.createElement('script');s.onerror=function(){window.bmlet[bm]=false;};s.src
+=bm;document.getElementsByTagName('head')[0].appendChild(s);}}('http://f.cl.ly/items/0X2q3N2n1V0
+i0B0R3X20/bookmarklet.js'));
+{% endhighlight %}
 
 linkinin bir bookmarklet oluşturmak için temel olduğunu gördük. Şimdi anlatacaklarım ise bu yapıyı nasıl
 en efektif şekilde kullanabileceğimizle ilgili olacak.
@@ -48,11 +49,12 @@ Basitçe bir twitter bookmarklet yazdık. Şimdi bunun çalışan bir versiyonun
 
 Bu kodu şimdi linkleştirip deneyelim:
 
-    :::javascript
-    javascript:(function(bm){if(!window.bmlet)window.bmlet={};if(!window.bmlet[bm]){window.bmlet[bm]
-    =true;var s=document.createElement('script');s.onerror=function(){window.bmlet[bm]=false;};s.src
-    =bm;document.getElementsByTagName('head')[0].appendChild(s);}}('https://raw.github.com/gist/2ef2
-    16215c516cdf4a0f/2137c66040360bb1c9259645f6865a3a18a37f20/bookmarklet.js'));
+{% highlight js %}
+javascript:(function(bm){if(!window.bmlet)window.bmlet={};if(!window.bmlet[bm]){window.bmlet[bm]
+=true;var s=document.createElement('script');s.onerror=function(){window.bmlet[bm]=false;};s.src
+=bm;document.getElementsByTagName('head')[0].appendChild(s);}}('https://raw.github.com/gist/2ef2
+16215c516cdf4a0f/2137c66040360bb1c9259645f6865a3a18a37f20/bookmarklet.js'));
+{% endhighlight %}
 
 Bunu bookmark olarak ekleyelim:
 

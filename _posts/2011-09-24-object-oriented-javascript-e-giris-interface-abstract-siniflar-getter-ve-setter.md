@@ -85,78 +85,79 @@ Teşekkürler.
 
 ## OOP Desteği Örnek Kod
 
-    :::javascript
-    //Unique array fonksiyonu
-    Array.prototype.unique = function() {
-        var unique = [];
-        for (var i = 0; i < this.length; i++) {
-            for (var j = i + 1; j < this.length; j++) {
-                if (this[i] === this[j]) j = ++i;
-            }
-            unique.push(this[i]);
+{% highlight js %}
+//Unique array fonksiyonu
+Array.prototype.unique = function() {
+    var unique = [];
+    for (var i = 0; i < this.length; i++) {
+        for (var j = i + 1; j < this.length; j++) {
+            if (this[i] === this[j]) j = ++i;
         }
-        return unique;
-    };
+        unique.push(this[i]);
+    }
+    return unique;
+};
 
-    //Interface atama fonksiyonu
-    Function.prototype.implements = function(interfaces) {
-        var _implements = [];
-        for (var i = 0; i < arguments.length; i++) {
-            _implements = _implements.concat(arguments[i]);
+//Interface atama fonksiyonu
+Function.prototype.implements = function(interfaces) {
+    var _implements = [];
+    for (var i = 0; i < arguments.length; i++) {
+        _implements = _implements.concat(arguments[i]);
+    }
+    _implements = _implements.unique();
+    this.__implements__ = _implements;
+
+    //chaining
+    return this;
+};
+
+//Implementasyon fonksiyonu
+Function.prototype.ensureImplements = function(interfaces) {
+    var _implements = [];
+    for (var i = 0; i < arguments.length; i++) {
+        _implements = _implements.concat(arguments[i]);
+    }
+    _implements = _implements.unique();
+    for (var i = 0; i < _implements.length; i++) {
+        if (!(_implements[i] in this) && !(_implements[i] in this.prototype)) {
+            throw new Error('Implementation failed, ' + _implements[i] + ' should be implemented');
         }
-        _implements = _implements.unique();
-        this.__implements__ = _implements;
+    }
+};
 
-        //chaining
-        return this;
+//Kalıtım fonksiyonu
+Function.prototype.extends = function(parent) {
+    this.prototype = Object.create(parent.prototype);
+    this.prototype.constructor = this;
+    //chaining
+    return this;
+};
+
+//Prototype ekleme fonksiyonu
+Function.prototype.proto = function(structure) {
+
+    for (var item in structure)
+    this.prototype[item] = structure[item];
+
+    //super methoda erişim
+    this.prototype.__defineGetter__('super', function() {
+        return this.__proto__.__proto__;
+    });
+
+    //statiklere erişim
+    this.prototype.__defineGetter__('self', function() {
+        return this.constructor;
+    });
+
+    //private method.
+    this.prototype.abstract = function() {
+        if (this.constructor == arguments[0].callee)
+          throw new Error('You cannot create instance of an abstract class.');
     };
 
-    //Implementasyon fonksiyonu
-    Function.prototype.ensureImplements = function(interfaces) {
-        var _implements = [];
-        for (var i = 0; i < arguments.length; i++) {
-            _implements = _implements.concat(arguments[i]);
-        }
-        _implements = _implements.unique();
-        for (var i = 0; i < _implements.length; i++) {
-            if (!(_implements[i] in this) && !(_implements[i] in this.prototype)) {
-                throw new Error('Implementation failed, ' + _implements[i] + ' should be implemented');
-            }
-        }
-    };
+    //implementasyon kontrol
+    this.ensureImplements(this.__implements__);
 
-    //Kalıtım fonksiyonu
-    Function.prototype.extends = function(parent) {
-        this.prototype = Object.create(parent.prototype);
-        this.prototype.constructor = this;
-        //chaining
-        return this;
-    };
-
-    //Prototype ekleme fonksiyonu
-    Function.prototype.proto = function(structure) {
-
-        for (var item in structure)
-        this.prototype[item] = structure[item];
-
-        //super methoda erişim
-        this.prototype.__defineGetter__('super', function() {
-            return this.__proto__.__proto__;
-        });
-
-        //statiklere erişim
-        this.prototype.__defineGetter__('self', function() {
-            return this.constructor;
-        });
-
-        //private method.
-        this.prototype.abstract = function() {
-            if (this.constructor == arguments[0].callee)
-              throw new Error('You cannot create instance of an abstract class.');
-        };
-
-        //implementasyon kontrol
-        this.ensureImplements(this.__implements__);
-
-        return this;
-    };
+    return this;
+};
+{% endhighlight %}

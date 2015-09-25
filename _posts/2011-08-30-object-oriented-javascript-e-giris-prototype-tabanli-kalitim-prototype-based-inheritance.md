@@ -69,10 +69,11 @@ bir üst sınıfa erişim sağlayabiliriz.
 Demek ki, `this.__proto__` kendi kendisinin prototipini verirken, `this.__proto__.__proto__` prototipinin asıl prototipini yani üst sınıfı verecek.
 Yani diğer dillerdeki `parent`, `super` mantığı, JavaScript’te `this.__proto__.__proto__` :) Biraz uzun fakat kısaltmak imkansız değil.
 
-    :::javascript
-    Object.prototype.super = function() {
-      return this.__proto__.__proto__;
-    }
+{% highlight js %}
+Object.prototype.super = function() {
+  return this.__proto__.__proto__;
+}
+{% endhighlight %}
 
 diyerek `this.super().constructor` şeklinde bir erişim sağlayabilirsiniz.
 

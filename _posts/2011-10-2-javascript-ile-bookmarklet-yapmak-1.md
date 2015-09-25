@@ -54,8 +54,9 @@ sitelerin jQuery kullanıp kullanmadıklarını bilemiyoruz.
 
 Evet gördüğümüz gibi
 
-    :::javascript
+{% highlight js %}
     javascript:void(alert(window.jQuery?'Var':'Yok'))
+{% endhighlight %}
 
 linkini kullanarak sayfada jQuery olup olmadığını gösteren bir başka bookmarklet yazdık. O halde yeni bir
 bookmarklet yazalım ve bu bookmarklet bulunduğu siteye jQuery desteği eklesin :)
@@ -64,10 +65,11 @@ bookmarklet yazalım ve bu bookmarklet bulunduğu siteye jQuery desteği eklesin
 
 Evet, gördüğümüz gibi sayfaya jQuery desteği ekleyen bir başka kod bu, bunu bookmarklet olarak yazarsak:
 
-    :::javascript
-    javascript:(function(jq){if(!jq){var s=document.createElement('script');s.src='http://code.jqu
-    ery.com/jquery-latest.min.js';document.getElementsByTagName('head')[0].appendChild(s);jQuery.n
-    oConflict();}}(window.jQuery));
+{% highlight js %}
+javascript:(function(jq){if(!jq){var s=document.createElement('script');s.src='http://code.jqu
+ery.com/jquery-latest.min.js';document.getElementsByTagName('head')[0].appendChild(s);jQuery.n
+oConflict();}}(window.jQuery));
+{% endhighlight %}
 
 şeklinde bir kodumuz olacak. `jQuery.noConflict();` yapmamızın sebebi ise, kullanıcının mevcut sisteminde zaten adı `$`
 olan bir başka fonksiyon olabilir. Bookmarklet’in bu mevcut yapıya zarar vermiyor olması gerekir.
@@ -77,11 +79,12 @@ Görüldüğü gibi, basit bir bookmarklet yaparak sayfaya jQuery desteği eklem
 yeteneği. JavaScript dosyasını çağırdığınızda artık kullanıcının sayfasına erişebilir hale geliyorsunuz ve
 tüm kapılar açılıyor :)
 
-    :::javascript
-    javascript:(function(bm){if(!window.bmlet)window.bmlet={};if(!window.bmlet[bm]){window.bmlet[bm]
-    =true;var s=document.createElement('script');s.onerror=function(){window.bmlet[bm]=false;};s.src
-    =bm;document.getElementsByTagName('head')[0].appendChild(s);}}('http://f.cl.ly/items/0X2q3N2n1V0
-    i0B0R3X20/bookmarklet.js'));
+{% highlight js %}
+javascript:(function(bm){if(!window.bmlet)window.bmlet={};if(!window.bmlet[bm]){window.bmlet[bm]
+=true;var s=document.createElement('script');s.onerror=function(){window.bmlet[bm]=false;};s.src
+=bm;document.getElementsByTagName('head')[0].appendChild(s);}}('http://f.cl.ly/items/0X2q3N2n1V0
+i0B0R3X20/bookmarklet.js'));
+{% endhighlight %}
 
 Bu kod temel bir bookmarklet kodu. Son parametrede verilen kodu bir kez çalıştırıp bırakıyor.
 Tabii dolayısıyla burada istediğimizi yapmakta özgür oluyoruz.

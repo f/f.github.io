@@ -8,8 +8,9 @@ CSS’te derinliği olan selectorler verimsizlik yaratıyorlar. Fakat temel seç
 
 Diyelim ki şöyle bir seçicimiz var (ayrıca ID’lerin tekil olması gerektiğini de hatırlayalım):
 
-    :::css
-    #nav li ul li a#active {...}
+{% highlight css %}
+#nav li ul li a#active {...}
+{% endhighlight %}
 
 Browserlar sağdan sola okuduklarından beri, işler browserin gözünde şu şekilde yürüyor.
 

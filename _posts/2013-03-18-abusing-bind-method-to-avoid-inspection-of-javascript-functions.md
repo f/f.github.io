@@ -7,10 +7,11 @@ Hello!
 
 You all know we can see a function's implementation with Web Inspector:
 
-    :::javascript
-    function STCustom() {
-        // Hello, I'm the implementation!
-    }
+{% highlight js %}
+function STCustom() {
+    // Hello, I'm the implementation!
+}
+{% endhighlight %}
 
 The inspector says what is the implementation:
 
@@ -20,10 +21,11 @@ I realised that if I bind `STCustom` function anything else, the implementation 
 
 Let's wrap it and bind to undefined.
 
-    :::javascript
-    var STCustom = function () {
-        // Hello, I'm the implementation!
-    }.bind();
+{% highlight js %}
+var STCustom = function () {
+    // Hello, I'm the implementation!
+}.bind();
+{% endhighlight %}
 
 Now, let's see it's implementation:
 
@@ -31,18 +33,20 @@ Now, let's see it's implementation:
 
 It's not visible. But it's not useful for now. Let's abuse it more. :)
 
-    var STCustom = (function () {
-      function STCustom() {
-        // Hello I'm the implementation!
-      }
-      STCustom.prototype.setColumnSize = function(number) {
-        // do some calculations
-      };
-      STCustom.prototype.setRowSize = function(number) {
-        // do more calculations
-      };
-      return STCustom;
-    })();
+{% highlight js %}
+var STCustom = (function () {
+  function STCustom() {
+    // Hello I'm the implementation!
+  }
+  STCustom.prototype.setColumnSize = function(number) {
+    // do some calculations
+  };
+  STCustom.prototype.setRowSize = function(number) {
+    // do more calculations
+  };
+  return STCustom;
+})();
+{% endhighlight %}
 
 It's a simple JavaScript class with methods. Before try to hide them let's check the `STCustom` variable.
 
@@ -50,18 +54,20 @@ It's a simple JavaScript class with methods. Before try to hide them let's check
 
 OK, It's still visible. Let's `.bind` it to nothing again:
 
-    var STCustom = (function () {
-      function STCustom() {
-        // Hello I'm the implementation!
-      }
-      STCustom.prototype.setColumnSize = function(number) {
-        // do some calculations
-      };
-      STCustom.prototype.setRowSize = function(number) {
-        // do more calculations
-      };
-      return STCustom.bind();
-    })();
+{% highlight js %}
+var STCustom = (function () {
+  function STCustom() {
+    // Hello I'm the implementation!
+  }
+  STCustom.prototype.setColumnSize = function(number) {
+    // do some calculations
+  };
+  STCustom.prototype.setRowSize = function(number) {
+    // do more calculations
+  };
+  return STCustom.bind();
+})();
+{% endhighlight %}
 
 ![image](http://cl.ly/image/212d1S0M3n2J/Screen%20Shot%202013-03-18%20at%202.22.13%20AM.png)
 
@@ -71,21 +77,23 @@ Now, it's hidden again. What about the methods?
 
 These are visible. So we should hide them too, abusing "bind":
 
-    var STCustom = (function () {
-      function STCustom() {
-        // Hello I'm the implementation!
-         for (var method in this)
-          if (this.hasOwnProperty(method) && this[method].bind)
-            this[method] = this[method].bind(this);
-      }
-      STCustom.prototype.setColumnSize = function(number) {
-        // do some calculations
-      };
-      STCustom.prototype.setRowSize = function(number) {
-        // do more calculations
-      };
-      return STCustom.bind();
-    })();
+{% highlight js %}
+var STCustom = (function () {
+  function STCustom() {
+    // Hello I'm the implementation!
+     for (var method in this)
+      if (this.hasOwnProperty(method) && this[method].bind)
+        this[method] = this[method].bind(this);
+  }
+  STCustom.prototype.setColumnSize = function(number) {
+    // do some calculations
+  };
+  STCustom.prototype.setRowSize = function(number) {
+    // do more calculations
+  };
+  return STCustom.bind();
+})();
+{% endhighlight %}
 
 We bound all the methods to the object itself. So it couldn't be inspected.
 

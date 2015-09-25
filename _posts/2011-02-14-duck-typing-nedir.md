@@ -14,6 +14,7 @@ En çok Javascript ile birlikte görmüş olduğumuz bu teknik, şu manaya gelir
 
 Şu kullanıma bakın:
 
+
 {% highlight js %}
 function Ordek() {}
 
@@ -30,6 +31,7 @@ Ordek.prototype = {
 };
 {% endhighlight %}
 
+
 {% highlight js %}
 var ordek = new Ordek();
 
@@ -38,6 +40,7 @@ if (ordek.vak) // Vaklıyor mu?
 {% endhighlight %}
 
 Şeklinde açıklayabiliriz :) Güncel programlamadaki kullanımı ise şu şekildedir:
+
 
 {% highlight js %}
 if (data.join)

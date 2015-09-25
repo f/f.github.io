@@ -11,23 +11,19 @@ bir sorunla karşılaştım. Araştırmalarım sonucunda bunun bir locale sorunu
 
 `syncdb` yaptığımda initial data yüklenirken karakter sorunu yaşıyordum. Bunun için önce şu komutu denedim:
 
-    :::bash
     sudo -u postgres createdb -E UTF8
 
 Bunun karşılığında aldığım cevap ise şu:
 
-    :::bash
     createdb: database creation failed: ERROR:  encoding UTF8 does not match locale en_US
     DETAIL:  The chosen LC_CTYPE setting requires encoding LATIN1.
 
 Dedim o halde burada bir başka şey olmalı:
 
-    :::bash
     sudo -u postgres createdb --locale=en_US.utf8
 
 Bu kez aldığım cevap:
 
-    :::bash
     createdb: database creation failed: ERROR:  encoding LATIN1 does not match locale en_US.utf8
     DETAIL:  The chosen LC_CTYPE setting requires encoding UTF8.
 
@@ -37,14 +33,14 @@ O halde başka bir çözümü olmalı diye düşündüm ve internette biraz ara�
 
 Burada şu komutu gördüm:
 
-    :::sql
-    CREATE DATABASE mydb WITH ENCODING = 'UTF-8'
-    LC_CTYPE = 'en_US.utf8' LC_COLLATE = 'en_US.utf8'
-    TEMPLATE template0;
+{% highlight sql %}
+CREATE DATABASE mydb WITH ENCODING = 'UTF-8'
+LC_CTYPE = 'en_US.utf8' LC_COLLATE = 'en_US.utf8'
+TEMPLATE template0;
+{% endhighlight %}
 
 Dolayısıyla Postgres Shell'e girip bu komutu çalıştırarak UTF-8 bir DB oluşturabiliyorum, fakat bu çok uzun bir iş:
 
-    :::bash
     sudo -u postgres psql
     postgres=# CREATE DATABASE mydb WITH ENCODING = 'UTF-8'
     postgres=# LC_CTYPE = 'en_US.utf8' LC_COLLATE = 'en_US.utf8'
@@ -52,15 +48,15 @@ Dolayısıyla Postgres Shell'e girip bu komutu çalıştırarak UTF-8 bir DB olu
 
 Bunun yerine createdb-utf8 adında bir alias oluşturalım ve `.profile` dosyamıza ekleyelim:
 
-    :::bash
-    function createdb-utf8() {
-      sudo -u postgres psql -c "CREATE DATABASE $1 WITH ENCODING='UTF-8' \
-      LC_CTYPE='en_US.utf8' LC_COLLATE='en_US.utf8' TEMPLATE template0;"
-    }
+{% highlight bash %}
+function createdb-utf8() {
+  sudo -u postgres psql -c "CREATE DATABASE $1 WITH ENCODING='UTF-8' \
+  LC_CTYPE='en_US.utf8' LC_COLLATE='en_US.utf8' TEMPLATE template0;"
+}
+{% endhighlight %}
 
 Böylece
 
-    :::bash
     ~$ createdb-utf8 mydb
 
 diyerek yeni bir DB oluşturabilirsiniz.

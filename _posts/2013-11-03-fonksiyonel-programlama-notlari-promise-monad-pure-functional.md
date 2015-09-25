@@ -16,7 +16,7 @@ Daha önce de dediğimiz gibi, fonksiyonel programlamada işleri *olabildiğince
 
 Kod üzerine açıklama satırı yazarak anlatmaya çalıştım;
 
-    :::javascript
+{% highlight js %}
     // `successes` ve `fails` parametreleri aslında durumu taşımaya yardımcı olan **monadic** parametreler.
     function Promise(onsuccess, onfail, successes, fails) {
 
@@ -86,6 +86,7 @@ Kod üzerine açıklama satırı yazarak anlatmaya çalıştım;
       };
 
     }
+{% endhighlight %}
 
 ## When Monadı
 
@@ -95,7 +96,7 @@ When de aslında bir *Promise*. Yani implemente ederken promise kullanıyorsunuz
 
 `When` de bir monad. Yine state taşıma özelliğine sahip ve saf sayılabilir. (`deferred.reject` kısmı biraz yanetki gibi ama orası için daha farklı çözümler arıyorum.)
 
-    :::javascript
+{% highlight js %}
     // İki farklı state taşıyor, birisi bütün promiseler bir diğeri ise deferred.
     function When(promises, deferred) {
       // deferred varsayılan bir promise ve bu state taşınacak.
@@ -126,10 +127,11 @@ When de aslında bir *Promise*. Yani implemente ederken promise kullanıyorsunuz
     function when() {
       return When(Array.prototype.slice.call(arguments));
     }
+{% endhighlight %}
 
 Şimdi testlerimizi yapalım:
 
-    :::javascript
+{% highlight js %}
 
     x = Promise(function () {
       console.log("x resolved");
@@ -154,17 +156,19 @@ When de aslında bir *Promise*. Yani implemente ederken promise kullanıyorsunuz
     When([x, y]).success(function () {
       console.log("x and y all resolved");
     });
+{% endhighlight %}
 
 .. ve çalıştıralım:
 
-    :::javascript
+{% highlight js %}
     x.resolve(); //=> "x resolved", "x resolved again..", "x resolved again and again.."
 
     y.resolve(); //=> "y resolved", "x and y all resolved"
+{% endhighlight %}
 
 Önce `y`yi daha sonra `x`i resolve etmiş olsaydık yine aynı durum oluşacaktı. Eğer herhangi bir rejection işlemi yapsaydık;
 
-    :::javascript
+{% highlight js %}
     When([x, y]).success(function () {
       console.log("x and y all resolved");
     }).fail(function () {
@@ -172,6 +176,7 @@ When de aslında bir *Promise*. Yani implemente ederken promise kullanıyorsunuz
     });
 
     y.reject(); //=> "something rejected!"
+{% endhighlight %}
 
 Monad'lara hala çalışıyorum; eğer hata yaptıysam mutlaka düzeltmiş olurum :)    
 
@@ -179,7 +184,7 @@ Monad'lara hala çalışıyorum; eğer hata yaptıysam mutlaka düzeltmiş oluru
 
 Yorumlar kodu ilk bakışta görmeyi zorlaştırıyor gibi geldi; bu yüzden kodu bir de yorumsuz ekliyorum:
 
-    :::javascript
+{% highlight js %}
     function Promise(onsuccess, onfail, successes, fails) {
 
       if (!successes) successes = [];
@@ -256,3 +261,4 @@ Yorumlar kodu ilk bakışta görmeyi zorlaştırıyor gibi geldi; bu yüzden kod
     function when() {
       return When(Array.prototype.slice.call(arguments));
     }        
+{% endhighlight %}

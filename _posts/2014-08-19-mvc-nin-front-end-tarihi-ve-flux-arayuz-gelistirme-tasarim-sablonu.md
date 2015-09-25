@@ -66,6 +66,7 @@ Bu noktada, geçen yıl, **Facebook** ilginç bir konsept ortaya sürerek [React
 
 Bir veriyi DOM'a direkt olarak yollamak her yaptığınız değişiklikten sonra git'e push yapmak gibi. Bu ne kadar verimsizse DOM üzerinde direkt değişiklik de aynı derecede verimsiz bir hale geliyor.
 
+
 {% highlight html %}
 <ul data-bind="[1,2,3]">
     <li>1</li>
@@ -116,6 +117,7 @@ Burayı hızlıca analiz edelim:
 
 Bu durumda bu kodu MVC ile yapıyor olsaydık yeni bir mesaj geldiğinde şu olurdu:
 
+
 {% highlight js %}
 getNewMessage: function (message) {
     this.increaseUnreadMessages(); // View #2
@@ -139,6 +141,7 @@ Store adı üzerinde bir veri yapısı. Bir diziyi veya nesneyi store olarak dü
 
 Store ayrıca o veriyi düzenleyen methodlara da sahip olabilir.
 
+
 {% highlight js %}
 var store = Store({
     items: [],
@@ -149,6 +152,7 @@ var store = Store({
 {% endhighlight %}
 
 Bu veri yapısını basit bir store olarak düşünebilirsiniz. Store her yaptığı değişiklikten sonra *değiştiğine dair bir sinyal gönderir*.
+
 
 {% highlight js %}
 var store = Store({
@@ -173,6 +177,7 @@ Bu sinyali dinleyen **View** kendisini store'un verisine göre günceller.
 
 Aşağıdaki örnekte View'in store'u dinledikten sonra kendisini güncellemesini gösteren pseudo bir kod mevcut.
 
+
 {% highlight js %}
 var view = View(function () {
     store.on('change', this.render);
@@ -184,6 +189,7 @@ View ayrıca son kullanıcıya bakan taraf olduğu için kullanıcıdan gelen "k
 ### Dispatcher
 
 Dispatcher yapılar temel olarak kendisine bağlı olan store'lara mesaj gönderen yapılardır. Bu mesajları yukarıda bahsedildiği şekilde View'dan alırlar.
+
 
 {% highlight js %}
 var dispatcher = Dispatcher({
@@ -199,6 +205,7 @@ var dispatcher = Dispatcher({
 {% endhighlight %}
 
 Yukarıdaki view örneğine göre aşağıdaki gibi bir **dispatch** işlemi tanımlayabiliriz.
+
 
 {% highlight js %}
 var view = View(function () {
@@ -216,6 +223,7 @@ var view = View(function () {
 
 Action creator'ler server veya action'un modifiye edilmesi gereken yerlerde bulunmalıdırlar.
 
+
 {% highlight js %}
 var actionCreator = ActionCreator({
 
@@ -229,6 +237,7 @@ var actionCreator = ActionCreator({
 {% endhighlight %}
 
 Daha sonra yukarıdaki örneği değiştirip `actionCreator` üzerinden çağıralım.
+
 
 {% highlight js %}
 var view = View(function () {

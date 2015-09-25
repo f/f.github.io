@@ -315,6 +315,7 @@ a.sidebar-nav-item:focus {
 .masthead-title a:hover,
 .related-posts a:hover,
 .posts a:hover,
+.post a:hover,
 .post .post-title a:hover {
   text-decoration: none;
   background-image: -webkit-linear-gradient(rgba(141, 179, 89, 0.25) 0%, #303030 100%);
