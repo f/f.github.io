@@ -14,31 +14,35 @@ En çok Javascript ile birlikte görmüş olduğumuz bu teknik, şu manaya gelir
 
 Şu kullanıma bakın:
 
-    :::javascript
-    function Ordek() {}
+{% highlight js %}
+function Ordek() {}
 
-    Ordek.prototype = {
+Ordek.prototype = {
 
-	    vak : function()
-	    {
-		    alert('vak vak');
-	    },
-	    yuz : function()
-	    {
-		    alert('yüz..');
-	    }
-    };
+  vak : function()
+  {
+    alert('vak vak');
+  },
+  yuz : function()
+  {
+    alert('yüz..');
+  }
+};
+{% endhighlight %}
 
-    var ordek = new Ordek();
+{% highlight js %}
+var ordek = new Ordek();
 
-    if (ordek.vak) // Vaklıyor mu?
-	    ordek.yuz(); // O zaman ördek.
+if (ordek.vak) // Vaklıyor mu?
+  ordek.yuz(); // O zaman ördek.
+{% endhighlight %}
 
 Şeklinde açıklayabiliriz :) Güncel programlamadaki kullanımı ise şu şekildedir:
 
-    :::javascript
-    if (data.join)
-	    alert('Join yapabildiğine göre bu bir array olabilir.');
+{% highlight js %}
+if (data.join)
+  alert('Join yapabildiğine göre bu bir array olabilir.');
+{% endhighlight %}
 
 İşte bu tekniğe Duck typing deniyor, yani her zaman kullandığımız bir olay :) Sağlıcakla...
 
