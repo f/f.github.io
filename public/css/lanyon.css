@@ -41,17 +41,21 @@ body {
 }
 
 html {
-  font-family: "Roboto Slab", Georgia, "Times New Roman", serif;
-  font-weight: 100;
+  font-family: "Helvetica Neue", Georgia, "Times New Roman", serif;
+  font-weight: 300;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Roboto Slab", Helvetica, Arial, sans-serif;
-  font-weight: 300;
+  font-family: "Libre Baskerville", Helvetica, Arial, sans-serif;
+  font-weight: 700;
   color: #313131;
   letter-spacing: -.025rem;
+  opacity: 0.5;
 }
 
+h1 {
+  opacity: 1;
+}
 
 /*
  * Wrapper
@@ -312,6 +316,12 @@ a.sidebar-nav-item:focus {
   margin-bottom: 4em;
 }
 
+.post-abstract {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-top: 0.5rem;
+}
+
 .masthead-title a:hover,
 .related-posts a:hover,
 .posts a:hover,
@@ -347,7 +357,7 @@ a.sidebar-nav-item:focus {
 .post-date {
   display: block;
   margin-top: -.5rem;
-  margin-bottom: 1rem;
+  /*margin-bottom: 1rem;*/
   color: #9a9a9a;
 }
 

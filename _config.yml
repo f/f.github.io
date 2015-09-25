@@ -10,7 +10,7 @@ relative_permalinks: true
 
 # Setup
 title:               fka blog
-tagline:             'development journal'
+tagline:             'journal of programming studies'
 description:         'JavaScript and front-end writings by Fatih Kadir Akın. Posts may be in English or Turkish'
 url:                 http://f.github.io
 baseurl:             ''
