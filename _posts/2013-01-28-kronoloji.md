@@ -2,6 +2,7 @@
 layout: post
 title: "\"Kronoloji\""
 abstract: 2007'nin Şubat ayında yazdığım kısa bir yazı.
+nocomment: true
 ---
 
 Yıllar insanoğluna biriktirdiği yükünü yavaş yavaş doldurmaya başladı,
