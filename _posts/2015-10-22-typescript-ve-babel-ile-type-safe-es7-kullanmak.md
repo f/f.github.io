@@ -1,6 +1,6 @@
 ---
 layout: post
-title: TypeScript ve Babel.js Kullanarak Typed-ES7 Kullanmak
+title: TypeScript ve Babel.js Kullanarak Type Safe ES7 Kullanmak
 abstract: JavaScript gelişiyor. Bu durumda biz de sürekli öğreniyoruz. TypeScript'le birlikte ECMAScript 7'nin özelliklerini bugünden itibaren nasıl kullanacağımızı inceleyelim.
 ---
 
