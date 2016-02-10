@@ -6,7 +6,6 @@ highlighter:         pygments
 #
 # Use of `relative_permalinks` ensures post links from the index work properly.
 permalink:           :title.html
-relative_permalinks: true
 
 # Setup
 title:               fka blog
@@ -24,3 +23,6 @@ author:
 
 # Custom vars
 version:             1.0.0
+
+gems:
+  - jekyll-paginate
